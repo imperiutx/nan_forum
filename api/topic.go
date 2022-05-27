@@ -51,14 +51,14 @@ type getTopicRequest struct {
 }
 
 type getTopicResponse struct {
-	CategoryID    int64        `json:"category_id"`
-	Title         string       `json:"title"`
-	Body          string       `json:"body"`
-	CreatedBy     string       `json:"created_by"`
-	Points        int64        `json:"points"`
-	TimeAgo       string       `json:"time_ago"`
-	CommentsCount int64        `json:"comments_count"`
-	Comments      []db.Comment `json:"comments"`
+	CategoryID    *int64        `json:"category_id,omitempty"`
+	Title         *string       `json:"title,omitempty"`
+	Body          *string       `json:"body,omitempty"`
+	CreatedBy     *string       `json:"created_by,omitempty"`
+	Points        *int64        `json:"points,omitempty"`
+	TimeAgo       *string       `json:"time_ago,omitempty"`
+	CommentsCount *int64        `json:"comments_count,omitempty"`
+	Comments      *[]db.Comment `json:"comments,omitempty"`
 }
 
 func (server *Server) getTopic(ctx *gin.Context) {
@@ -101,15 +101,17 @@ func (server *Server) getTopic(ctx *gin.Context) {
 		return
 	}
 
+	ta := utils.TimeSince(topic.CreatedAt)
+
 	rsp := getTopicResponse{
-		CategoryID:    topic.CategoryID,
-		Title:         topic.Title,
-		Body:          topic.Body,
-		CreatedBy:     topic.CreatedBy,
-		Points:        topic.Points,
-		TimeAgo:       utils.TimeSince(topic.CreatedAt),
-		CommentsCount: count,
-		Comments:      comments,
+		CategoryID:    &topic.CategoryID,
+		Title:         &topic.Title,
+		Body:          &topic.Body,
+		CreatedBy:     &topic.CreatedBy,
+		Points:        &topic.Points,
+		TimeAgo:       &ta,
+		CommentsCount: &count,
+		Comments:      &comments,
 	}
 
 	ctx.JSON(http.StatusOK, rsp)
@@ -135,7 +137,7 @@ func (server *Server) listTopics(ctx *gin.Context) {
 
 	rspTopics := make([]getTopicResponse, len(topics))
 
-	for _, tp := range topics {
+	for i, tp := range topics {
 		count, err := server.store.CountCommentsByTopicID(ctx, int64(tp.ID))
 		if err != nil {
 			if err == sql.ErrNoRows {
@@ -146,16 +148,23 @@ func (server *Server) listTopics(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		rsp := getTopicResponse{
-			CategoryID:    tp.CategoryID,
-			Title:         tp.Title,
-			Body:          tp.Body,
-			CreatedBy:     tp.CreatedBy,
-			Points:        tp.Points,
-			TimeAgo:       utils.TimeSince(tp.CreatedAt),
-			CommentsCount: count,
+
+		catID := tp.CategoryID
+		tt := tp.Title
+		tb := tp.Body
+		ta := utils.TimeSince(tp.CreatedAt)
+		tc := tp.CreatedBy
+		tp := tp.Points
+
+		rspTopics[i] = getTopicResponse{
+			CategoryID:    &catID,
+			Title:         &tt,
+			Body:          &tb,
+			CreatedBy:     &tc,
+			Points:        &tp,
+			TimeAgo:       &ta,
+			CommentsCount: &count,
 		}
-		rspTopics = append(rspTopics, rsp)
 	}
 
 	ctx.JSON(http.StatusOK, rspTopics)

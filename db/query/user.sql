@@ -1,17 +1,21 @@
 -- name: GetUserByID :one
 SELECT * FROM users
-WHERE id = $1 LIMIT 1;
+WHERE id = $1 AND is_banned = false
+LIMIT 1;
 
 -- name: GetUserByEmail :one
 SELECT * FROM users
-WHERE email = $1 LIMIT 1;
+WHERE email = $1 AND is_banned = false
+LIMIT 1;
 
 -- name: GetUserByUserName :one
 SELECT * FROM users
-WHERE user_name = $1 LIMIT 1;
+WHERE user_name = $1 AND is_banned = false
+LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM users
+WHERE is_banned = false
 ORDER BY id;
 
 -- name: CreateUser :one

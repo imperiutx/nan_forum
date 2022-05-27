@@ -6,7 +6,7 @@ LIMIT 1;
 -- name: ListTopics :many
 SELECT * FROM topics
 WHERE is_visible = true
-ORDER BY updated_at;
+ORDER BY updated_at DESC;
 
 -- name: CreateTopic :one
 INSERT INTO topics (

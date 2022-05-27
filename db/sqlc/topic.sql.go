@@ -105,7 +105,7 @@ func (q *Queries) IncreaseTopicPointsByID(ctx context.Context, id int32) error {
 const listTopics = `-- name: ListTopics :many
 SELECT id, category_id, title, body, created_by, points, is_visible, created_at, updated_at FROM topics
 WHERE is_visible = true
-ORDER BY updated_at
+ORDER BY updated_at DESC
 `
 
 func (q *Queries) ListTopics(ctx context.Context) ([]Topic, error) {

@@ -71,7 +71,8 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT id, user_name, email, hashed_password, is_banned, is_admin, created_at, updated_at FROM users
-WHERE email = $1 LIMIT 1
+WHERE email = $1 AND is_banned = false
+LIMIT 1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -92,7 +93,8 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 
 const getUserByID = `-- name: GetUserByID :one
 SELECT id, user_name, email, hashed_password, is_banned, is_admin, created_at, updated_at FROM users
-WHERE id = $1 LIMIT 1
+WHERE id = $1 AND is_banned = false
+LIMIT 1
 `
 
 func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
@@ -113,7 +115,8 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 
 const getUserByUserName = `-- name: GetUserByUserName :one
 SELECT id, user_name, email, hashed_password, is_banned, is_admin, created_at, updated_at FROM users
-WHERE user_name = $1 LIMIT 1
+WHERE user_name = $1 AND is_banned = false
+LIMIT 1
 `
 
 func (q *Queries) GetUserByUserName(ctx context.Context, userName string) (User, error) {
@@ -134,6 +137,7 @@ func (q *Queries) GetUserByUserName(ctx context.Context, userName string) (User,
 
 const listUsers = `-- name: ListUsers :many
 SELECT id, user_name, email, hashed_password, is_banned, is_admin, created_at, updated_at FROM users
+WHERE is_banned = false
 ORDER BY id
 `
 
