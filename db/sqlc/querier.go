@@ -10,6 +10,7 @@ import (
 
 type Querier interface {
 	BanUser(ctx context.Context, id int32) error
+	CountCommentsByTopicID(ctx context.Context, topicID int64) (int64, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error)
 	CreateTopic(ctx context.Context, arg CreateTopicParams) (Topic, error)

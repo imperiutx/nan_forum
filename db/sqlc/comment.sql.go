@@ -9,6 +9,19 @@ import (
 	"context"
 )
 
+const countCommentsByTopicID = `-- name: CountCommentsByTopicID :one
+SELECT count(id)
+FROM comments
+WHERE topic_id = $1
+`
+
+func (q *Queries) CountCommentsByTopicID(ctx context.Context, topicID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countCommentsByTopicID, topicID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createComment = `-- name: CreateComment :one
 INSERT INTO comments (
     topic_id, body, created_by

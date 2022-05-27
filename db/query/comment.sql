@@ -34,3 +34,8 @@ WHERE id = $1 AND is_visible = true;
 UPDATE comments
 SET points = points - 1, updated_at = now()
 WHERE id = $1 AND is_visible = true;
+
+-- name: CountCommentsByTopicID :one
+SELECT count(id)
+FROM comments
+WHERE topic_id = $1;
