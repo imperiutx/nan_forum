@@ -46,6 +46,17 @@ func (q *Queries) CreateTopic(ctx context.Context, arg CreateTopicParams) (Topic
 	return i, err
 }
 
+const decreaseTopicPointsByID = `-- name: DecreaseTopicPointsByID :exec
+UPDATE topics
+SET points = points - 1, updated_at = now()
+WHERE id = $1 AND is_visible = true
+`
+
+func (q *Queries) DecreaseTopicPointsByID(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, decreaseTopicPointsByID, id)
+	return err
+}
+
 const getTopicByID = `-- name: GetTopicByID :one
 SELECT id, category_id, title, body, created_by, points, is_visible, created_at, updated_at FROM topics
 WHERE id = $1 AND is_visible = true
@@ -77,6 +88,17 @@ WHERE id = $1
 
 func (q *Queries) HideTopicByID(ctx context.Context, id int32) error {
 	_, err := q.db.ExecContext(ctx, hideTopicByID, id)
+	return err
+}
+
+const increaseTopicPointsByID = `-- name: IncreaseTopicPointsByID :exec
+UPDATE topics
+SET points = points + 1, updated_at = now()
+WHERE id = $1 AND is_visible = true
+`
+
+func (q *Queries) IncreaseTopicPointsByID(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, increaseTopicPointsByID, id)
 	return err
 }
 

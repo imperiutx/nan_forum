@@ -24,3 +24,13 @@ WHERE id = $1 AND is_visible = true;
 UPDATE topics
 SET is_visible = false, updated_at = now()
 WHERE id = $1;
+
+-- name: IncreaseTopicPointsByID :exec
+UPDATE topics
+SET points = points + 1, updated_at = now()
+WHERE id = $1 AND is_visible = true;
+
+-- name: DecreaseTopicPointsByID :exec
+UPDATE topics
+SET points = points - 1, updated_at = now()
+WHERE id = $1 AND is_visible = true;
