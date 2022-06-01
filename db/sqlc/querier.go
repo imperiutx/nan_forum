@@ -18,6 +18,7 @@ type Querier interface {
 	DecreaseCommentPointsByID(ctx context.Context, id int32) error
 	DecreaseTopicPointsByID(ctx context.Context, id int32) error
 	DeleteUser(ctx context.Context, id int32) error
+	FindCategory(ctx context.Context, name string) (Category, error)
 	GetCategoryByID(ctx context.Context, id int32) (Category, error)
 	GetCommentByID(ctx context.Context, id int32) (Comment, error)
 	GetTopicByID(ctx context.Context, id int32) (Topic, error)

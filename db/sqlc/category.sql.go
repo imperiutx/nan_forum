@@ -37,6 +37,26 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 	return i, err
 }
 
+const findCategory = `-- name: FindCategory :one
+SELECT id, name, created_by, is_visible, created_at, updated_at FROM categories
+WHERE name = $1
+LIMIT 1
+`
+
+func (q *Queries) FindCategory(ctx context.Context, name string) (Category, error) {
+	row := q.db.QueryRowContext(ctx, findCategory, name)
+	var i Category
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.CreatedBy,
+		&i.IsVisible,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getCategoryByID = `-- name: GetCategoryByID :one
 SELECT id, name, created_by, is_visible, created_at, updated_at FROM categories
 WHERE id = $1 AND is_visible = true

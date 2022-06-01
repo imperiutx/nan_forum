@@ -3,10 +3,11 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	db "github.com/imperiutx/nan_forum/db/sqlc"
+	"github.com/imperiutx/nan_forum/middleware"
 	"github.com/imperiutx/nan_forum/utils"
 )
 
-// Server serves HTTP requests for our banking service.
+// Server serves HTTP requests for our forum service.
 type Server struct {
 	config utils.Config
 	store  db.Store
@@ -32,13 +33,28 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
-	router.POST("/categories", server.createCategory)
+	router.Use(middleware.Recover())
 
-	router.POST("/topics", server.createTopic)
-	router.GET("/topics", server.listTopics)
-	router.GET("/topics/:id", server.getTopic)
+	v1 := router.Group("v1")
 
-	router.POST("/comments", server.createComment)
+	categories := v1.Group("/categories")
+	{
+		categories.POST("", server.createCategory)
+
+	}
+
+	topics := v1.Group("/topics")
+	{
+		topics.POST("", server.createTopic)
+		topics.GET("", server.listTopics)
+		topics.GET("/:id", server.getTopic)
+	}
+
+	comments := v1.Group("/comments")
+	{
+		comments.POST("", server.createComment)
+
+	}
 
 	server.router = router
 }

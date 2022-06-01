@@ -11,6 +11,16 @@ type Store interface {
 	Querier
 }
 
+func (s Store) FindCategory(ctx context.Context, name string, moreInfo ...string) (*Category, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Store) CreateCategory(ctx context.Context, params CreateCategoryParams) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 // SQLStore provides all functions to execute SQL queries and transactions
 type SQLStore struct {
 	db *sql.DB
