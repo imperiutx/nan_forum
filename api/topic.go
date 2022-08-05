@@ -43,7 +43,7 @@ func (server *Server) createTopic(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, topic)
+	ctx.JSON(http.StatusOK, topic.ID)
 }
 
 type getTopicRequest struct {
