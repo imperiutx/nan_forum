@@ -9,25 +9,37 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
 	config, err := utils.LoadConfig(".")
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		log.Println("cannot load config:", err)
+		return err
 	}
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
-		log.Fatal("cannot connect to db:", err)
+		log.Println("cannot connect to db:", err)
+		return err
 	}
 
 	store := db.NewStore(conn)
 
 	server, err := api.NewServer(config, store)
 	if err != nil {
-		log.Fatal("cannot create server:", err)
+		log.Println("cannot create server:", err)
+		return err
 	}
 
 	err = server.Start(config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal("cannot start server:", err)
+		log.Println("cannot start server:", err)
+		return err
 	}
+
+	return nil
 }

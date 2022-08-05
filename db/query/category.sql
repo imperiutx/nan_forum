@@ -15,3 +15,8 @@ INSERT INTO categories (
     $1, $2
 )
 RETURNING *;
+
+-- name: FindCategory :one
+SELECT * FROM categories
+WHERE name = $1
+LIMIT 1;
