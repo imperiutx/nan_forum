@@ -1,10 +1,12 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/imperiutx/nan_forum/db/sqlc"
+	"github.com/imperiutx/nan_forum/token"
 	"github.com/lib/pq"
-	"net/http"
 )
 
 type createCategoryRequest struct {
@@ -19,9 +21,11 @@ func (server *Server) createCategory(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
 	arg := db.CreateCategoryParams{
 		Name:      req.Name,
-		CreatedBy: req.CreatedBy,
+		CreatedBy: authPayload.UserName,
 	}
 
 	category, err := server.store.CreateCategory(ctx, arg)
