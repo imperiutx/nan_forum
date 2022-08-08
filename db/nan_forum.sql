@@ -4,6 +4,7 @@ CREATE TABLE "users" (
   "email" varchar UNIQUE NOT NULL,
   "hashed_password" varchar NOT NULL,
   "is_banned" boolean NOT NULL DEFAULT false,
+  "is_admin" boolean NOT NULL DEFAULT false,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL
 );
