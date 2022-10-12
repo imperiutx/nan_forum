@@ -31,7 +31,10 @@ func run() error {
 		return err
 	}
 
-	runDBMigration(config.MigrationURL, config.DBSource)
+	if err = runDBMigration(config.MigrationURL, config.DBSource); err != nil {
+		log.Println("cannot migrate:", err)
+		return err
+	}
 
 	store := db.NewStore(conn)
 
@@ -50,15 +53,19 @@ func run() error {
 	return nil
 }
 
-func runDBMigration(migrationURL string, dbSource string) {
+func runDBMigration(migrationURL string, dbSource string) error {
 	migration, err := migrate.New(migrationURL, dbSource)
 	if err != nil {
-		log.Fatal("cannot create new migrate instance:", err)
+		log.Println("cannot create new migrate instance:", err)
+		return err
 	}
 
 	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal("failed to run migrate up:", err)
+		log.Println("failed to run migrate up:", err)
+		return err
 	}
 
 	log.Println("db migrated successfully")
+
+	return nil
 }
