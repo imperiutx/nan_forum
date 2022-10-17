@@ -46,6 +46,8 @@ func (server *Server) setupRouter() {
 
 	v1 := router.Group("v1")
 
+	v1.POST("/tokens/renew_access", server.renewAccessToken)
+
 	categories := v1.Group("/categories").Use(authMiddleware(server.tokenMaker))
 	{
 		categories.POST("", server.createCategory)
