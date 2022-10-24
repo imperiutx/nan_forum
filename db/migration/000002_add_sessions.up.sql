@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "sessions" (
 "id" uuid PRIMARY KEY,
-"user_name" varchar(20) UNIQUE NOT NULL,
+"user_name" varchar(20) NOT NULL,
 "refresh_token" varchar NOT NULL,
 "user_agent" varchar NOT NULL,
 "client_ip" varchar NOT NULL,

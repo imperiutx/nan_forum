@@ -2,12 +2,36 @@ syntax = "proto3";
 
 package pb;
 
+import "google/api/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/imperiutx/nan_forum/pb";
 
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+	info: {
+		title: "Not a Normal Forum API";
+		version: "1.0";
+		contact: {
+			name: "Imperiutx";
+			url: "https://github.com/imperiutx";
+			email: "imperiutx@email.com";
+		};
+	};
+};
+
 service NanForum {
-    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
-    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {}
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/create_user"
+            body: "*"
+        };
+    }
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/login_user"
+            body: "*"
+        };
+    }
 }
